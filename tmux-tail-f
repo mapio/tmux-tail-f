@@ -5,12 +5,24 @@ TMUX=$(type -p tmux) || { echo "This script requires tmux"; exit 1; }
 SESSION="$TMUX-tail-f-$$"
 
 LAYOUT=even-vertical
-while getopts ":vht" opt; do
+while getopts ":Hvht" opt; do
 	case $opt in
     	v) LAYOUT=even-vertical;;
 		h) LAYOUT=even-horizontal;;
 		t) LAYOUT=tiled;;
-		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
+		H) cat <<EOF
+Usage: tmux-tail-f [OPTION]... [FILE]...
+Tail the FILEs in a tmux window, one per pane.
+
+Optional arguments:
+  -v     use the 'even-vertical' layout (default).
+  -h     use the 'even-horizontal' layout.
+  -t     use the 'tiled' layout.
+  -H     print this help.
+EOF
+exit
+;;
+		*) echo "tmux: invalid option -- '$OPTARG', use -H for help" >&2; exit 1;;
 	esac
 done
 shift $(( OPTIND - 1 ))

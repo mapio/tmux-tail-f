@@ -1,0 +1,35 @@
+#!/bin/bash
+
+TMUX=$(type -p tmux) || { echo "This script requires tmux"; exit 1; }
+
+SESSION="$TMUX-tail-f-$$"
+
+LAYOUT=even-vertical
+while getopts ":vht" opt; do
+	case $opt in
+    	v) LAYOUT=even-vertical;;
+		h) LAYOUT=even-horizontal;;
+		t) LAYOUT=tiled;;
+		\?) echo "Invalid option: -$OPTARG" >&2; exit 1;;
+	esac
+done
+shift $(( OPTIND - 1 ))
+[ "$1" = "--" ] && shift
+
+function at_exit() {
+	$TMUX kill-session -t "$SESION" >/dev/null 2>&1
+}
+trap at_exit EXIT
+
+(
+$TMUX new-session -d -s "$SESSION"
+for FILE in "$@"; do
+	$TMUX split-window -t "$SESSION" "tail -f '$FILE'"
+	$TMUX select-layout -t "$SESSION" tiled
+done
+$TMUX kill-pane -t "${SESSION}.0"
+$TMUX select-pane -t "${SESSION}.0"
+$TMUX select-layout -t "$SESSION" "$LAYOUT"
+$TMUX set-window-option -t "$SESSION" synchronize-panes on
+$TMUX attach -t "$SESSION"
+) >/dev/null 2>&1

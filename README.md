@@ -15,6 +15,7 @@ Optional arguments:
   -h     use the 'even-horizontal' layout.
   -t     use the 'tiled' layout.
   -H     print this help.
+  -U     update this script to the latest version.
 ```
 
 For example

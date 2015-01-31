@@ -5,11 +5,16 @@ TMUX=$(type -p tmux) || { echo "This script requires tmux"; exit 1; }
 SESSION="$TMUX-tail-f-$$"
 
 LAYOUT=even-vertical
-while getopts ":Hvht" opt; do
+while getopts ":UHvht" opt; do
 	case $opt in
     	v) LAYOUT=even-vertical;;
 		h) LAYOUT=even-horizontal;;
 		t) LAYOUT=tiled;;
+		U) echo "Selfupdating..."
+TMPFILE=$(mktemp) || { echo "Can't create temp file"; exit 1; }
+curl -o "$TMPFILE" -sL https://raw.githubusercontent.com/mapio/tmux-tail-f/master/tmux-tail-f
+exec bash <(echo "cp '$TMPFILE' '$0'")
+;;
 		H) cat <<EOF
 Usage: tmux-tail-f [OPTION]... [FILE]...
 Tails the FILEs in a tmux window, one per pane; hitting `^C` in
@@ -21,6 +26,7 @@ Optional arguments:
   -h     use the 'even-horizontal' layout.
   -t     use the 'tiled' layout.
   -H     print this help.
+  -U     update this script to the latest version.
 EOF
 exit
 ;;

@@ -34,22 +34,20 @@ exit
 	esac
 done
 shift $(( OPTIND - 1 ))
-[ "$1" = "--" ] && shift
+[[ "$1" == "--" ]] && shift
 
 function at_exit() {
 	$TMUX kill-session -t "$SESION" >/dev/null 2>&1
 }
 trap at_exit EXIT
 
-(
-$TMUX new-session -d -s "$SESSION"
+$TMUX -q new-session -d -s "$SESSION"
 for FILE in "$@"; do
-	$TMUX split-window -t "$SESSION" "tail -f '$FILE'"
-	$TMUX select-layout -t "$SESSION" tiled
+	$TMUX -q split-window -t "$SESSION" "tail -f '$FILE'"
+	$TMUX -q select-layout -t "$SESSION" tiled
 done
-$TMUX kill-pane -t "${SESSION}.0"
-$TMUX select-pane -t "${SESSION}.0"
-$TMUX select-layout -t "$SESSION" "$LAYOUT"
-$TMUX set-window-option -t "$SESSION" synchronize-panes on
-$TMUX attach -t "$SESSION"
-) >/dev/null 2>&1
+$TMUX -q kill-pane -t "${SESSION}.0"
+$TMUX -q select-pane -t "${SESSION}.0"
+$TMUX -q select-layout -t "$SESSION" "$LAYOUT"
+$TMUX -q set-window-option -t "$SESSION" synchronize-panes on
+$TMUX -q attach -t "$SESSION" >/dev/null 2>&1

@@ -12,7 +12,9 @@ while getopts ":Hvht" opt; do
 		t) LAYOUT=tiled;;
 		H) cat <<EOF
 Usage: tmux-tail-f [OPTION]... [FILE]...
-Tail the FILEs in a tmux window, one per pane.
+Tails the FILEs in a tmux window, one per pane; hitting `^C` in
+any one of the panes will terminate all the tail commands and
+kill the tmux session.
 
 Optional arguments:
   -v     use the 'even-vertical' layout (default).

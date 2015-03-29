@@ -24,7 +24,7 @@ For example
 tmux-tail-f -h /var/log/httpd/{access,error}_log
 ```
 
-will show the Apahce logs in a tmux window split in two panes.
+will show the Apache logs in a tmux window split in two panes.
 
 This tool is heavily inspired by [mtmux](https://github.com/wbond/mtmux).
 

@@ -19,7 +19,8 @@ exec bash <(echo "cp '$TMPFILE' '$0'")
 Usage: tmux-tail-f [OPTION]... [FILE]...
 Tails the FILEs in a tmux window, one per pane; hitting `^C` in
 any one of the panes will terminate all the tail commands and
-kill the tmux session.
+kill the tmux session. Uses the `-F` option instead of `-f`,
+which keeps trying to open a file if it is inaccessible.
 
 Optional arguments:
   -v     use the 'even-vertical' layout (default).
@@ -43,7 +44,7 @@ trap at_exit EXIT
 
 $TMUX -q new-session -d -s "$SESSION"
 for FILE in "$@"; do
-	$TMUX -q split-window -t "$SESSION" "tail -f '$FILE'"
+	$TMUX -q split-window -t "$SESSION" "tail -F '$FILE'"
 	$TMUX -q select-layout -t "$SESSION" tiled
 done
 $TMUX -q kill-pane -t "${SESSION}.0"

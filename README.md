@@ -8,7 +8,8 @@ $ tmux-tail-f -H
 Usage: tmux-tail-f [OPTION]... [FILE]...
 Tails the FILEs in a tmux window, one per pane; hitting `^C` in
 any one of the panes will terminate all the tail commands and
-kill the tmux session.
+kill the tmux session.  Uses the `-F` option instead of `-f`,
+which keeps trying to open a file if it is inaccessible.
 
 Optional arguments:
   -v     use the 'even-vertical' layout (default).

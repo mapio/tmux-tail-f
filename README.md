@@ -12,6 +12,7 @@ kill the tmux session.  Uses the `-F` option instead of `-f`,
 which keeps trying to open a file if it is inaccessible.
 
 Optional arguments:
+  -d     do not kill tmux session upon detach.
   -v     use the 'even-vertical' layout (default).
   -h     use the 'even-horizontal' layout.
   -t     use the 'tiled' layout.

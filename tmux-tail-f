@@ -4,9 +4,11 @@ TMUX=$(type -p tmux) || { echo "This script requires tmux"; exit 1; }
 
 SESSION="$TMUX-tail-f-$$"
 
+NOKILL=0
 LAYOUT=even-vertical
-while getopts ":UHvht" opt; do
+while getopts ":UHvhtd" opt; do
 	case $opt in
+        d) NOKILL=1;;
     	v) LAYOUT=even-vertical;;
 		h) LAYOUT=even-horizontal;;
 		t) LAYOUT=tiled;;
@@ -23,6 +25,7 @@ kill the tmux session. Uses the `-F` option instead of `-f`,
 which keeps trying to open a file if it is inaccessible.
 
 Optional arguments:
+  -d     do not kill tmux session upon detach.
   -v     use the 'even-vertical' layout (default).
   -h     use the 'even-horizontal' layout.
   -t     use the 'tiled' layout.
@@ -40,7 +43,7 @@ shift $(( OPTIND - 1 ))
 function at_exit() {
 	$TMUX kill-session -t "$SESSION" >/dev/null 2>&1
 }
-trap at_exit EXIT
+[[ "$NOKILL" == "1" ]] || trap at_exit EXIT
 
 $TMUX -q new-session -d -s "$SESSION"
 for FILE in "$@"; do
